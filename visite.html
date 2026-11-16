@@ -1,0 +1,58 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Visite 3D · Galerie Cécile Fakhoury</title>
+<link rel="stylesheet" href="style.css"></head><body>
+<header><div class="wrap"><a href="index.html"><img src="img/logo.png" alt="Galerie Cécile Fakhoury"></a>
+<button class="burger" onclick="document.querySelector('nav').classList.toggle('open')">≡</button><nav><a href="index.html" class="">Accueil</a><a href="artistes.html" class="">Artistes</a><a href="expositions.html" class="">Expositions</a><a href="visite.html" class="on">Visite 3D</a><a href="galerie.html" class="">La galerie</a></nav></div></header>
+<style>#v{position:fixed;inset:74px 0 0 0;background:#ddd}#cap{position:fixed;left:24px;bottom:24px;max-width:420px;background:rgba(255,255,255,.95);padding:18px 22px;border:1px solid var(--line);font-size:13px;display:none}
+#cap .t{font:500 22px 'Cormorant Garamond',serif;line-height:1.1;margin-bottom:6px}#help{position:fixed;right:24px;bottom:24px;background:rgba(17,17,17,.85);color:#fff;padding:12px 16px;font-size:12px;line-height:1.5}
+#intro{position:fixed;inset:74px 0 0 0;background:rgba(245,243,238,.92);display:flex;align-items:center;justify-content:center;text-align:center;z-index:5}footer{display:none}</style>
+<div id="v"></div><div id="intro"><div><p class="eyebrow">Visite en 3D · Abidjan</p><h1>Dieu n'est pas obligé</h1><p class="muted" style="margin:18px 0 28px">Roméo Mivekannin · 14 œuvres · du 5 novembre 2026 au 9 janvier 2027</p><button class="btn dark" id="go">Entrer dans la salle</button></div></div>
+<div id="cap"><div class="t"></div><div class="m muted"></div></div>
+<div id="help">Glisser pour regarder · Flèches ou ZQSD pour avancer<br>Cliquer sur une œuvre pour s'en approcher</div>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+const OE=[{"t": "Cérémonie du pacte d'amitié (ou pacte du sang), d'après Frédéric Gadmer (1930)", "m": "acrylique sur velours libre noir", "d": "140 x 189 cm", "f": "img/o/o01.jpg", "w": 1500, "h": 1082}, {"t": "Agnus Dei, d'après Francisco de Zurbaran (1635-1640)", "m": "acrylique sur velours libre noir", "d": "140 x 188 cm", "f": "img/o/o02.jpg", "w": 1500, "h": 1047}, {"t": "Guardia do Samba de Roda, d'après Rapha Dutra (2026)", "m": "acrylique sur velours libre noir", "d": "223 x 140 cm", "f": "img/o/o03.jpg", "w": 1019, "h": 1500}, {"t": "Iniciação-Iganhin (Initiation à Infangni), d'après Pierre Fatumbi Verger (1958)", "m": "acrylique sur velours libre noir", "d": "191 x 140 cm", "f": "img/o/o04.jpg", "w": 1121, "h": 1500}, {"t": "Sob os olhos da Igreja \"Sous les yeux de l'Eglise\", d'après Giacomo Mancini (2020)", "m": "Acrylique sur velours libre noir", "d": "203 x 140 cm", "f": "img/o/o05.jpg", "w": 1003, "h": 1500}, {"t": "Le sacre du printemps, d'après Germaine Acogny (2020)", "m": "acrylique sur velours libre noir", "d": "281 x 495 cm", "f": "img/o/o06.jpg", "w": 1500, "h": 866}, {"t": "Condomble priestess, d'après Chester Higgins", "m": "acrylique sur velours libre noir", "d": "259 x 140 cm", "f": "img/o/o07.jpg", "w": 969, "h": 1500}, {"t": "Bolero, d'après Wesley Ruzibiza (2022)", "m": "acrylique sur velours libre noir", "d": "140 x 317 cm", "f": "img/o/o08.jpg", "w": 1500, "h": 718}, {"t": "Novo Samba d'Après Pedro Miceli", "m": "acrylique sur velours libre noir", "d": "252 x 140 cm", "f": "img/o/o09.jpg", "w": 925, "h": 1500}, {"t": "Le sacre du printemps, d'après Germaine Acogny (2020)", "m": "acrylique sur velours libre noir", "d": "210 x 140 cm", "f": "img/o/o10.jpg", "w": 973, "h": 1500}, {"t": "Le sacre du printemps, d'après Germaine Acogny (2020)", "m": "Acrylique sur velours libre noir", "d": "236 x 140 cm", "f": "img/o/o11.jpg", "w": 1016, "h": 1500}, {"t": "Les fous d'Abidjan, d'après Dorris Haron Kasco (1994)", "m": "acrylique sur velours libre noir", "d": "236 x 140 cm", "f": "img/o/o12.jpg", "w": 958, "h": 1500}, {"t": "Au nom du Christ, d'Après Roger Gnoan Mbala (1993)", "m": "Acrylique sur velours libre noir", "d": "140 x 253 cm", "f": "img/o/o13.jpg", "w": 1500, "h": 881}, {"t": "Le sacre du printemps, d'après Germaine Acogny (2020)", "m": "acrylique sur velours libre noir", "d": "209 x 140 cm", "f": "img/o/o14.jpg", "w": 1003, "h": 1500}];
+const el=document.getElementById('v');const R=new THREE.WebGLRenderer({antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(R.domElement);
+const S=new THREE.Scene();S.background=new THREE.Color(0xf6f4ef);const C=new THREE.PerspectiveCamera(55,1,0.1,200);C.position.set(0,1.6,6.5);
+function rs(){R.setSize(el.clientWidth,el.clientHeight);C.aspect=el.clientWidth/el.clientHeight;C.updateProjectionMatrix()}addEventListener('resize',rs);rs();
+S.add(new THREE.HemisphereLight(0xffffff,0xd8d2c6,1.15));const dl=new THREE.DirectionalLight(0xffffff,.5);dl.position.set(3,8,4);S.add(dl);
+const LW=26,LD=18,HH=3.6;const wm=new THREE.MeshBasicMaterial({color:0xf6f4ef});
+const fl=new THREE.Mesh(new THREE.PlaneGeometry(LW,LD),new THREE.MeshBasicMaterial({color:0xd9d2c4}));fl.rotation.x=-Math.PI/2;S.add(fl);
+const ce=new THREE.Mesh(new THREE.PlaneGeometry(LW,LD),wm);ce.rotation.x=Math.PI/2;ce.position.y=HH;ce.material=new THREE.MeshBasicMaterial({color:0xfbfaf8});S.add(ce);
+[[0,-LD/2+.01,0,LW],[0,LD/2-.01,Math.PI,LW],[-LW/2+.01,0,Math.PI/2,LD],[LW/2-.01,0,-Math.PI/2,LD]].forEach(p=>{const pl=new THREE.Mesh(new THREE.PlaneGeometry(p[3],0.12),new THREE.MeshBasicMaterial({color:0xe4ddd0}));pl.position.set(p[0],0.06,p[1]);pl.rotation.y=p[2];S.add(pl)});
+function wall(w,x,z,ry){const m=new THREE.Mesh(new THREE.PlaneGeometry(w,HH),wm);m.position.set(x,HH/2,z);m.rotation.y=ry;S.add(m)}
+wall(LW,0,-LD/2,0);wall(LW,0,LD/2,Math.PI);wall(LD,-LW/2,0,Math.PI/2);wall(LD,LW/2,0,-Math.PI/2);
+const TL=new THREE.TextureLoader();const arts=[];
+// 5 au fond, 4 à gauche, 4 à droite, 1 face d'entrée
+const slots=[];for(let i=0;i<5;i++)slots.push([-10+i*5,-LD/2+0.03,0]);for(let i=0;i<4;i++)slots.push([-LW/2+0.03,-6+i*4,Math.PI/2]);for(let i=0;i<4;i++)slots.push([LW/2-0.03,-6+i*4,-Math.PI/2]);slots.push([0,LD/2-0.02,Math.PI]);
+OE.forEach((o,i)=>{const s=slots[i];let h=2.5,w=h*o.w/o.h;if(w>3.9){w=3.9;h=w*o.h/o.w}
+TL.load(o.f,t=>{t.colorSpace=THREE.SRGBColorSpace;const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:t}));
+m.position.set(s[0],1.7,s[1]);const fr=new THREE.Mesh(new THREE.PlaneGeometry(w+0.08,h+0.08),new THREE.MeshBasicMaterial({color:0x1a1a1a}));fr.position.set(s[0],1.7,s[1]);fr.rotation.y=s[2];fr.translateZ(-0.005);S.add(fr);m.rotation.y=s[2];if(s[2]!==0&&Math.abs(s[2])!==Math.PI){m.position.x=s[0];m.position.z=s[1]}m.userData=o;S.add(m);arts.push(m)});});
+// banc
+const b=new THREE.Mesh(new THREE.BoxGeometry(3,0.45,0.8),new THREE.MeshLambertMaterial({color:0x2b2a28}));b.position.set(0,0.225,1);S.add(b);
+let yaw=0,pitch=-0.04,drag=false,px=0,py=0,target=null;const keys={};
+el.addEventListener('pointerdown',e=>{drag=true;px=e.clientX;py=e.clientY;el.dataset.m=0});
+addEventListener('pointerup',e=>{if(drag&&el.dataset.m<4)pick(e);drag=false});
+addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-px,dy=e.clientY-py;el.dataset.m=+el.dataset.m+Math.abs(dx)+Math.abs(dy);yaw-=dx*.004;pitch=Math.max(-.6,Math.min(.6,pitch-dy*.003));px=e.clientX;py=e.clientY});
+addEventListener('keydown',e=>keys[e.key.toLowerCase()]=1);addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
+const rc=new THREE.Raycaster(),cap=document.getElementById('cap');
+function pick(e){const r=R.domElement.getBoundingClientRect();rc.setFromCamera({x:(e.clientX-r.left)/r.width*2-1,y:-(e.clientY-r.top)/r.height*2+1},C);
+const h=rc.intersectObjects(arts)[0];if(!h)return;const m=h.object,o=m.userData;const n=new THREE.Vector3(0,0,1).applyQuaternion(m.quaternion);
+target=m.position.clone().add(n.multiplyScalar(3.4));target.y=1.6;yaw=Math.atan2(-n.x,-n.z)+Math.PI;pitch=0;
+cap.style.display='block';cap.querySelector('.t').textContent=o.t;cap.querySelector('.m').textContent=o.m+' · '+o.d}
+document.getElementById('go').onclick=()=>document.getElementById('intro').remove();
+function loop(){requestAnimationFrame(loop);const f=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw)),r=new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
+let mv=new THREE.Vector3();if(keys['arrowup']||keys['z']||keys['w'])mv.add(f);if(keys['arrowdown']||keys['s'])mv.sub(f);if(keys['q']||keys['a'])mv.sub(r);if(keys['d'])mv.add(r);
+if(keys['arrowleft'])yaw+=.025;if(keys['arrowright'])yaw-=.025;
+if(mv.lengthSq()){target=null;cap.style.display='none';C.position.add(mv.normalize().multiplyScalar(.08))}
+if(target)C.position.lerp(target,.06);C.position.x=Math.max(-LW/2+1,Math.min(LW/2-1,C.position.x));C.position.z=Math.max(-LD/2+1,Math.min(LD/2-1,C.position.z));
+C.rotation.set(pitch,yaw,0,'YXZ');R.render(S,C)}loop();
+</script>
+<footer><div class="wrap"><div class="cols">
+<div><b>Abidjan</b>Cocody, boulevard Latrille, entre la Sodemi et l'immeuble Carbone<br>+225 27 22 44 66 77<br>abidjan@cecilefakhoury.com</div>
+<div><b>Dakar</b>+221 33 842 90 91<br>dakar@cecilefakhoury.com</div>
+<div><b>Paris</b>Showroom, sur rendez-vous<br>+33 (0)7 62 06 36 20<br>paris@cecilefakhoury.com</div>
+<div><b>Suivre la galerie</b><a href="https://www.instagram.com/galeriececilefakhoury/" target="_blank">Instagram</a><br><a href="https://cecilefakhoury.com/mailing-list/" target="_blank">Lettre d'information</a><br><a href="https://cecilefakhoury.com" target="_blank">Site officiel</a></div>
+</div><p class="demo">Maquette de refonte proposée, non indexée. Textes, œuvres et expositions repris de cecilefakhoury.com ; images courtesy Galerie Cécile Fakhoury.</p></div></footer>
+</body></html>
